@@ -19,7 +19,7 @@
       "App\\": "src/"
     },
     "files": [
-      "bootstrap/helpers.php"
+
     ]
   }
 }

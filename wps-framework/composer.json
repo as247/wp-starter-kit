@@ -60,12 +60,7 @@
         }
     },
     "autoload-dev": {
-        "files": [
-            "tests/Database/stubs/MigrationCreatorFakeMigration.php"
-        ],
-        "psr-4": {
-            "WpStarter\\Tests\\": "tests/"
-        }
+
     },
     "extra": {
         "branch-alias": {
