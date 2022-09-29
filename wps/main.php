@@ -85,16 +85,30 @@ final class SW_MAIN
         $kernel = $this->sw->make(WpStarter\Contracts\Http\Kernel::class);
         add_action('plugins_loaded',[$kernel,'bootstrap'], 1);
 	    add_action('init', function ()use($kernel) {
+
             $response = $kernel->handle(
                 $request = Request::capture()
-            )->send();
+            );
+            if($request->route()){//A route matched
+                if($response instanceof \WpStarter\Wordpress\Response){
+                    $response->sendHeaders();
+                    add_filter('the_content',function()use($response){
+                        return $response->getContent();
+                    });
+                    $kernel->terminate($request, $response);
+                }else {
+                    $response->send();
+                    $kernel->terminate($request, $response);
+                }
 
-            $kernel->terminate($request, $response);
+
+            }
 		}, 1);
         do_action('sw_early_bootstrap');
 
 	}
 }
-
-SW_MAIN::make()->run();
+if(!wp_installing()) {
+    SW_MAIN::make()->run();
+}
 

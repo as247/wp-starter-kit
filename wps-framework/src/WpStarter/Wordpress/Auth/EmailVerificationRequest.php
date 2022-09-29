@@ -1,6 +1,6 @@
 <?php
 
-namespace WpStarter\Foundation\Auth;
+namespace WpStarter\Wordpress\Auth;
 
 use WpStarter\Auth\Events\Verified;
 use WpStarter\Foundation\Http\FormRequest;

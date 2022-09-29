@@ -161,6 +161,7 @@ return [
         WpStarter\Translation\TranslationServiceProvider::class,
         WpStarter\Validation\ValidationServiceProvider::class,
         WpStarter\View\ViewServiceProvider::class,
+        WpStarter\Wordpress\WordpressServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -173,7 +174,7 @@ return [
         //App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         //App\Providers\EventServiceProvider::class,
-        //App\Providers\RouteServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
 
     ],
 

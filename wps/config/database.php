@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => ws_env('DB_CONNECTION', 'mysql'),
+    'default' => ws_env('DB_CONNECTION', 'wordpress'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,25 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => ws_env('DB_FOREIGN_KEYS', true),
         ],
-
+        'wordpress' => [
+            'driver' => 'wp',
+            'url' => ws_env('DATABASE_URL'),
+            'host' => ws_env('DB_HOST', '127.0.0.1'),
+            'port' => ws_env('DB_PORT', '3306'),
+            'database' => ws_env('DB_DATABASE', 'forge'),
+            'username' => ws_env('DB_USERNAME', 'forge'),
+            'password' => ws_env('DB_PASSWORD', ''),
+            'unix_socket' => ws_env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => ws_env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
         'mysql' => [
             'driver' => 'mysql',
             'url' => ws_env('DATABASE_URL'),

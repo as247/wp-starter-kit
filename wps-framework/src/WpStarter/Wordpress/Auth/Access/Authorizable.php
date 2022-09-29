@@ -1,6 +1,6 @@
 <?php
 
-namespace WpStarter\Foundation\Auth\Access;
+namespace WpStarter\Wordpress\Auth\Access;
 
 use WpStarter\Contracts\Auth\Access\Gate;
 
