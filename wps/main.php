@@ -65,7 +65,7 @@ final class SW_MAIN
 		$kernel = $this->sw->make(WpStarter\Contracts\Console\Kernel::class);
         //add_action('sw_early_bootstrap',[$kernel,'earlyBootstrap'],0);
 		add_action('plugins_loaded',[$kernel,'bootstrap'], 1);
-		if(defined('WS_CLI') && WS_CLI) {//We have wp cli and sw cli, only actual run ws cli on ws cli
+		if(defined('WS_CLI') && WS_CLI) {
             add_action('init', function () use ($kernel) {
                 $status = $kernel->handle(
                     $input = new Symfony\Component\Console\Input\ArgvInput,
