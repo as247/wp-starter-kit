@@ -4,6 +4,7 @@ namespace WpStarter\Wordpress;
 
 use WpStarter\Database\Connection;
 use WpStarter\Support\ServiceProvider;
+use WpStarter\Wordpress\Auth\User;
 use WpStarter\Wordpress\Database\WpConnection;
 use WpStarter\Wordpress\Database\WpConnector;
 
@@ -16,6 +17,6 @@ class WordpressServiceProvider extends ServiceProvider
         });
     }
     function boot(){
-
+        User::setConnectionResolver($this->app['db']);
     }
 }

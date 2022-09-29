@@ -31,11 +31,17 @@ trait UserQuery
             $this->getTable() === $model->getTable() &&
             $this->getConnectionName() === $model->getConnectionName();
     }
+    function getIncrementing(){
+        return true;
+    }
     function getKeyName(){
         return 'ID';
     }
     function getKey(){
         return $this->ID;
+    }
+    function getKeyType(){
+        return 'int';
     }
     /**
      * Get the number of models to return per page.
@@ -87,6 +93,30 @@ trait UserQuery
     {
         return $this->qualifyColumn($this->getKeyName());
     }
+
+    /**
+     * Determine if the model has a given scope.
+     *
+     * @param  string  $scope
+     * @return bool
+     */
+    public function hasNamedScope($scope)
+    {
+        return method_exists($this, 'scope'.ucfirst($scope));
+    }
+
+    /**
+     * Apply the given named scope if possible.
+     *
+     * @param  string  $scope
+     * @param  array  $parameters
+     * @return mixed
+     */
+    public function callNamedScope($scope, array $parameters = [])
+    {
+        return $this->{'scope'.ucfirst($scope)}(...$parameters);
+    }
+
     /**
      * Create a new instance of the given model.
      *
@@ -166,11 +196,11 @@ trait UserQuery
      * Create a new Eloquent query builder for the model.
      *
      * @param  \WpStarter\Database\Query\Builder  $query
-     * @return Builder|static
+     * @return QueryBuilder|static
      */
     public function newUserQueryBuilder($query)
     {
-        return new Builder($query);
+        return new QueryBuilder($query);
     }
     /**
      * Get a new query builder that doesn't have any global scopes or eager loading.
