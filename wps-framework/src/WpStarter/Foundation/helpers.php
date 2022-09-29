@@ -152,7 +152,7 @@ if (! function_exists('ws_auth')) {
      * Get the available auth instance.
      *
      * @param  string|null  $guard
-     * @return \WpStarter\Contracts\Auth\Factory|\WpStarter\Contracts\Auth\Guard|\WpStarter\Contracts\Auth\StatefulGuard
+     * @return \WpStarter\Contracts\Auth\Factory|\WpStarter\Contracts\Auth\Guard
      */
     function ws_auth($guard = null)
     {

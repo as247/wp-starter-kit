@@ -2,7 +2,6 @@
 
 namespace WpStarter\Foundation\Providers;
 
-use WpStarter\Auth\Console\ClearResetsCommand;
 use WpStarter\Cache\Console\CacheTableCommand;
 use WpStarter\Cache\Console\ClearCommand as CacheClearCommand;
 use WpStarter\Cache\Console\ForgetCommand as CacheForgetCommand;
@@ -93,7 +92,6 @@ class ArtisanServiceProvider extends ServiceProvider implements DeferrableProvid
         'CacheClear' => 'command.cache.clear',
         'CacheForget' => 'command.cache.forget',
         'ClearCompiled' => 'command.clear-compiled',
-        'ClearResets' => 'command.auth.resets.clear',
         'ConfigCache' => 'command.config.cache',
         'ConfigClear' => 'command.config.clear',
         'Db' => DbCommand::class,
@@ -276,17 +274,7 @@ class ArtisanServiceProvider extends ServiceProvider implements DeferrableProvid
         });
     }
 
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerClearResetsCommand()
-    {
-        $this->app->singleton('command.auth.resets.clear', function () {
-            return new ClearResetsCommand;
-        });
-    }
+
 
     /**
      * Register the command.

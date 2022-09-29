@@ -1336,8 +1336,6 @@ class Application extends Container implements ApplicationContract, CachesConfig
             'log' => [\WpStarter\Log\LogManager::class, \Psr\Log\LoggerInterface::class],
             'mail.manager' => [\WpStarter\Mail\MailManager::class, \WpStarter\Contracts\Mail\Factory::class],
             'mailer' => [\WpStarter\Mail\Mailer::class, \WpStarter\Contracts\Mail\Mailer::class, \WpStarter\Contracts\Mail\MailQueue::class],
-            'auth.password' => [\WpStarter\Auth\Passwords\PasswordBrokerManager::class, \WpStarter\Contracts\Auth\PasswordBrokerFactory::class],
-            'auth.password.broker' => [\WpStarter\Auth\Passwords\PasswordBroker::class, \WpStarter\Contracts\Auth\PasswordBroker::class],
             'queue' => [\WpStarter\Queue\QueueManager::class, \WpStarter\Contracts\Queue\Factory::class, \WpStarter\Contracts\Queue\Monitor::class],
             'queue.connection' => [\WpStarter\Contracts\Queue\Queue::class],
             'queue.failer' => [\WpStarter\Queue\Failed\FailedJobProviderInterface::class],

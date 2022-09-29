@@ -5,23 +5,9 @@ namespace WpStarter\Contracts\Auth;
 interface Guard
 {
     /**
-     * Determine if the current user is authenticated.
-     *
-     * @return bool
-     */
-    public function check();
-
-    /**
-     * Determine if the current user is a guest.
-     *
-     * @return bool
-     */
-    public function guest();
-
-    /**
      * Get the currently authenticated user.
      *
-     * @return \WpStarter\Contracts\Auth\Authenticatable|null
+     * @return \WP_User|null
      */
     public function user();
 
@@ -32,19 +18,4 @@ interface Guard
      */
     public function id();
 
-    /**
-     * Validate a user's credentials.
-     *
-     * @param  array  $credentials
-     * @return bool
-     */
-    public function validate(array $credentials = []);
-
-    /**
-     * Set the current user.
-     *
-     * @param  \WpStarter\Contracts\Auth\Authenticatable  $user
-     * @return void
-     */
-    public function setUser(Authenticatable $user);
 }

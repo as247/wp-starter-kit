@@ -5,6 +5,7 @@ namespace App\Providers;
 use WpStarter\Cache\RateLimiting\Limit;
 use WpStarter\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use WpStarter\Http\Request;
+use WpStarter\Support\Facades\Auth;
 use WpStarter\Support\Facades\RateLimiter;
 use WpStarter\Support\Facades\Route;
 use WpStarter\Wordpress\Response;
@@ -40,7 +41,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             Route::get('/abc',function(){
-                return new Response('abc');
+                dd(ws_request()->user());
             });
         });
     }

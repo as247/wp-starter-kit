@@ -34,10 +34,8 @@ trait CreatesUserProviders
         }
 
         switch ($driver) {
-            case 'database':
-                return $this->createDatabaseProvider($config);
-            case 'eloquent':
-                return $this->createEloquentProvider($config);
+            case 'wp':
+                return $this->createWpProvider($config);
             default:
                 throw new InvalidArgumentException(
                     "Authentication user provider [{$driver}] is not defined."
@@ -58,28 +56,16 @@ trait CreatesUserProviders
         }
     }
 
-    /**
-     * Create an instance of the database user provider.
-     *
-     * @param  array  $config
-     * @return \WpStarter\Auth\DatabaseUserProvider
-     */
-    protected function createDatabaseProvider($config)
-    {
-        $connection = $this->app['db']->connection($config['connection'] ?? null);
-
-        return new DatabaseUserProvider($connection, $this->app['hash'], $config['table']);
-    }
 
     /**
      * Create an instance of the Eloquent user provider.
      *
      * @param  array  $config
-     * @return \WpStarter\Auth\EloquentUserProvider
+     * @return \WpStarter\Auth\WpUserProvider
      */
-    protected function createEloquentProvider($config)
+    protected function createWpProvider($config)
     {
-        return new EloquentUserProvider($this->app['hash'], $config['model']);
+        return new WpUserProvider($this->app['hash'], $config['model']);
     }
 
     /**

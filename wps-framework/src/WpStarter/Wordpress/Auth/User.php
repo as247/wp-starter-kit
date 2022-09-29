@@ -3,18 +3,15 @@
 namespace WpStarter\Wordpress\Auth;
 
 use WpStarter\Database\Eloquent\MassAssignmentException;
-use WpStarter\Auth\Authenticatable;
 use WpStarter\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use WpStarter\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use WpStarter\Exceptions\WpErrorException;
 use WpStarter\Wordpress\Auth\Access\Authorizable;
 use WpStarter\Wordpress\Auth\User\UserQuery;
 
 class User extends \WP_User implements
-    AuthenticatableContract,
     AuthorizableContract
 {
-    use Authenticatable, Authorizable;
+    use Authorizable;
     use User\HasAttributes,
         User\HasEvents,
         User\HasGlobalScopes,

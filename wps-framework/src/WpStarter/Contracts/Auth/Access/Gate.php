@@ -136,7 +136,7 @@ interface Gate
     /**
      * Get a guard instance for the given user.
      *
-     * @param  \WpStarter\Contracts\Auth\Authenticatable|mixed  $user
+     * @param  \WP_User|mixed  $user
      * @return static
      */
     public function forUser($user);

@@ -7,7 +7,7 @@ class GateEvaluated
     /**
      * The authenticatable model.
      *
-     * @var \WpStarter\Contracts\Auth\Authenticatable|null
+     * @var \WP_User|null
      */
     public $user;
 
@@ -35,7 +35,7 @@ class GateEvaluated
     /**
      * Create a new event instance.
      *
-     * @param  \WpStarter\Contracts\Auth\Authenticatable|null  $user
+     * @param  \WP_User|null  $user
      * @param  string  $ability
      * @param  bool|null  $result
      * @param  array  $arguments
