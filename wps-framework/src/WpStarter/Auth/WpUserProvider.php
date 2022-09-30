@@ -38,7 +38,11 @@ class WpUserProvider implements UserProvider
                 return $class::fromWpUser($identifier);
             }
         }
-
+        else{
+            $model=$this->createModel();
+            return $model->find($identifier);
+        }
+        return null;
     }
 
 
