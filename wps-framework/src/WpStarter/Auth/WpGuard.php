@@ -28,7 +28,7 @@ class WpGuard
      */
     public function user()
     {
-        return wp_get_current_user();
+        return $this->provider->retrieveById(wp_get_current_user());
     }
 
     /**

@@ -41,7 +41,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             Route::get('/abc',function(){
-                dd(ws_request()->user());
+                dd(ws_auth()->user());
             });
         });
     }

@@ -65,7 +65,7 @@ trait CreatesUserProviders
      */
     protected function createWpProvider($config)
     {
-        return new WpUserProvider($this->app['hash'], $config['model']);
+        return new WpUserProvider($config['model']);
     }
 
     /**

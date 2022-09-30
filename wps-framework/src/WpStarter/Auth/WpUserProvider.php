@@ -16,7 +16,6 @@ class WpUserProvider implements UserProvider
     /**
      * Create a new database user provider.
      *
-     * @param  \WpStarter\Contracts\Hashing\Hasher  $hasher
      * @param  string  $model
      * @return void
      */
@@ -33,30 +32,20 @@ class WpUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        $model = $this->createModel();
+        $class = '\\'.ltrim($this->model, '\\');
+        if($identifier instanceof \WP_User){
+            if(is_callable([$class,'fromWpUser'])) {
+                return $class::fromWpUser($identifier);
+            }
+        }
 
-        return $this->newModelQuery($model)
-                    ->where($model->getAuthIdentifierName(), $identifier)
-                    ->first();
     }
 
-    /**
-     * Get a new query builder for the model instance.
-     *
-     * @param  \WpStarter\Database\Eloquent\Model|null  $model
-     * @return \WpStarter\Database\Eloquent\Builder
-     */
-    protected function newModelQuery($model = null)
-    {
-        return is_null($model)
-                ? $this->createModel()->newQuery()
-                : $model->newQuery();
-    }
 
     /**
      * Create a new instance of the model.
      *
-     * @return \WpStarter\Database\Eloquent\Model
+     * @return \WpStarter\Wordpress\User
      */
     public function createModel()
     {

@@ -10,10 +10,10 @@ class TestCommand extends Command
 {
     protected $signature='test';
     function handle(){
-        $query=User::query()->where('ID',1);
+        $query=User::findBy('ID',1);
         $user=$query->first();
         if($user instanceof User) {
-            $user->update(['first_name'=>'abc','user_pass'=>'x1gt41']);
+            $user->update(['first_name'=>'abc','user_pass'=>'*FG3m&6cxiy(aGb*ov']);
             print_r($user->getChanges());
         }
         dd($user->getAttribute('a-b'));

@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) ws_env('APP_DEBUG', false),
+    'debug' => (bool) ws_env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
