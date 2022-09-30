@@ -1,6 +1,6 @@
 <?php
 
-namespace WpStarter\Wordpress\Auth\User;
+namespace WpStarter\Wordpress\Auth\Concerns;
 
 use WpStarter\Contracts\Events\Dispatcher;
 use WpStarter\Events\NullDispatcher;
@@ -26,6 +26,13 @@ trait HasEvents
      * @var array
      */
     protected $observables = [];
+
+    /**
+     * The event dispatcher instance.
+     *
+     * @var \WpStarter\Contracts\Events\Dispatcher
+     */
+    protected static $dispatcher;
 
     /**
      * Register observers with the model.

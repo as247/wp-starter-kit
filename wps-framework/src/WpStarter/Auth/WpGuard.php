@@ -24,7 +24,7 @@ class WpGuard
     /**
      * Get the currently authenticated user.
      *
-     * @return \WP_User|null
+     * @return \WpStarter\Wordpress\User|null
      */
     public function user()
     {

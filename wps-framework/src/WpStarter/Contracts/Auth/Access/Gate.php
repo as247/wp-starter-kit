@@ -136,7 +136,7 @@ interface Gate
     /**
      * Get a guard instance for the given user.
      *
-     * @param  \WP_User|mixed  $user
+     * @param  \WpStarter\Wordpress\User|mixed  $user
      * @return static
      */
     public function forUser($user);

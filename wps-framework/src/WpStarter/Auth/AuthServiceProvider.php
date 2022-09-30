@@ -45,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function registerUserResolver()
     {
-        $this->app->bind(\WP_User::class, function ($app) {
+        $this->app->bind(\WpStarter\Wordpress\User::class, function ($app) {
             return call_user_func($app['auth']->userResolver());
         });
     }

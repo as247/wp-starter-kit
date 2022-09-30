@@ -29,7 +29,7 @@ class WpUserProvider implements UserProvider
      * Retrieve a user by their unique identifier.
      *
      * @param  mixed  $identifier
-     * @return \WP_User|null
+     * @return \WpStarter\Wordpress\User|null
      */
     public function retrieveById($identifier)
     {

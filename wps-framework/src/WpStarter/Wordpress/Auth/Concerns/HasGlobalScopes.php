@@ -1,6 +1,6 @@
 <?php
 
-namespace WpStarter\Wordpress\Auth\User;
+namespace WpStarter\Wordpress\Auth\Concerns;
 
 use Closure;
 use WpStarter\Database\Eloquent\Scope;

@@ -18,5 +18,6 @@ class WordpressServiceProvider extends ServiceProvider
     }
     function boot(){
         User::setConnectionResolver($this->app['db']);
+        User::setEventDispatcher($this->app['events']);
     }
 }

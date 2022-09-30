@@ -8,12 +8,12 @@ use RuntimeException;
 /**
  * @method static \WpStarter\Auth\AuthManager extend(string $driver, \Closure $callback)
  * @method static \WpStarter\Auth\AuthManager provider(string $name, \Closure $callback)
- * @method static \WP_User|null user()
+ * @method static \WpStarter\Wordpress\User|null user()
  * @method static \WpStarter\Contracts\Auth\Guard|\WpStarter\Contracts\Auth\Guard guard(string|null $name = null)
  * @method static \WpStarter\Contracts\Auth\UserProvider|null createUserProvider(string $provider = null)
  * @method static int|string|null id()
  * @method static void logout()
- * @method static void setUser(\WP_User $user)
+ * @method static void setUser(\WpStarter\Wordpress\User $user)
  *
  * @see \WpStarter\Auth\AuthManager
  * @see \WpStarter\Contracts\Auth\Factory

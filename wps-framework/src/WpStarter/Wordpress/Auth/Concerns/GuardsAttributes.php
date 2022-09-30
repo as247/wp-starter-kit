@@ -1,6 +1,6 @@
 <?php
 
-namespace WpStarter\Wordpress\Auth\User;
+namespace WpStarter\Wordpress\Auth\Concerns;
 
 use WpStarter\Support\Str;
 
@@ -41,7 +41,7 @@ trait GuardsAttributes
      */
     public function getFillable()
     {
-        return $this->fillable;
+        return array_merge($this->fillable,$this->wp_fields);
     }
 
     /**

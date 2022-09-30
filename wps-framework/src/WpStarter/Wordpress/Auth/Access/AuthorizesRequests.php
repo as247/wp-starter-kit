@@ -26,7 +26,7 @@ trait AuthorizesRequests
     /**
      * Authorize a given action for a user.
      *
-     * @param  \WP_User|mixed  $user
+     * @param  \WpStarter\Wordpress\User|mixed  $user
      * @param  mixed  $ability
      * @param  mixed|array  $arguments
      * @return \WpStarter\Auth\Access\Response

@@ -2,23 +2,24 @@
 
 namespace WpStarter\Wordpress\Auth;
 
+use WP_User;
 use WpStarter\Database\Eloquent\MassAssignmentException;
 use WpStarter\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use WpStarter\Exceptions\WpErrorException;
 use WpStarter\Wordpress\Auth\Access\Authorizable;
-use WpStarter\Wordpress\Auth\User\UserQuery;
+use WpStarter\Wordpress\Auth\Concerns\UserQuery;
 
-class User extends \WP_User implements
+abstract class User extends WP_User implements
     AuthorizableContract
 {
     use Authorizable;
-    use User\HasAttributes,
-        User\HasEvents,
-        User\HasGlobalScopes,
-        User\HasRelationships,
-        User\HasTimestamps,
-        User\HidesAttributes,
-        User\GuardsAttributes;
+    use Concerns\HasAttributes,
+        Concerns\HasEvents,
+        Concerns\HasGlobalScopes,
+        Concerns\HasRelationships,
+        Concerns\HasTimestamps,
+        Concerns\HidesAttributes,
+        Concerns\GuardsAttributes;
     use UserQuery;
     /**
      * Indicates if the model was inserted during the current request lifecycle.
@@ -52,9 +53,22 @@ class User extends \WP_User implements
         'show_admin_bar_front',
         'locale',
         'role',
+        'user_status',
 
     ];
-    protected $fillable=[];
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string|null
+     */
+    const CREATED_AT = 'user_registered';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string|null
+     */
+    const UPDATED_AT = null;
 
     /**
      * The array of booted models.
@@ -62,12 +76,7 @@ class User extends \WP_User implements
      * @var array
      */
     protected static $booted = [];
-    /**
-     * The event dispatcher instance.
-     *
-     * @var \WpStarter\Contracts\Events\Dispatcher
-     */
-    protected static $dispatcher;
+
 
     /**
      * The array of trait initializers that will be called on each new instance.
@@ -75,6 +84,7 @@ class User extends \WP_User implements
      * @var array
      */
     protected static $traitInitializers = [];
+
     public function __construct($attributes=[],$site_id=0)
     {
         $this->bootIfNotBooted();
@@ -104,25 +114,22 @@ class User extends \WP_User implements
     protected function readMissingAttributes(){
         if(!empty($this->ID)){
             $user_id=$this->ID;
-            //user status is one of core field but not used
-            //Unset it here or put to core field list above
-            unset($this->data->user_status);
 
             foreach ($this->wp_fields as $field){
-                if(!isset($this->data->$field)){
+                if(!isset($this->data->{$field})){
                     if(metadata_exists('user',$user_id,$field)) {
-                        $this->data->$field = get_user_meta($user_id, $field, true);
+                        $this->data->{$field} = get_user_meta($user_id, $field, true);
                     }else{
-                        $this->data->$field = null;
+                        $this->data->{$field} = null;
                     }
                 }
             }
             foreach ($this->fillable as $field){
-                if(!isset($this->data->$field)){
+                if(!isset($this->data->{$field})){
                     if(metadata_exists('user',$user_id,$field)){
-                        $this->data->$field=get_user_meta($user_id,$field,true);
+                        $this->data->{$field}=get_user_meta($user_id,$field,true);
                     }else{
-                        $this->data->$field=null;
+                        $this->data->{$field}=null;
                     }
                 }
             }
@@ -147,6 +154,7 @@ class User extends \WP_User implements
     {
         if (! isset(static::$booted[static::class])) {
             static::$booted[static::class] = true;
+
             //Check for fillable
 
             if($needRemove=array_intersect($this->wp_fields,$this->fillable)){
@@ -217,7 +225,6 @@ class User extends \WP_User implements
         return $this->fill($attributes)->save($options);
     }
     public function fill($attributes){
-        $attributes=$this->mapLegacyAttributes($attributes);
         foreach ($attributes as $key=>$value){
             if($this->isFillable($key)) {
                 $this->setAttribute($key, $value);
@@ -230,24 +237,9 @@ class User extends \WP_User implements
         }
         return $this;
     }
-    protected function mapLegacyAttributes($attributes){
-        $map=['outlet_id'=>'user_login'];
-        foreach ($map as $legacy=>$key){
-            if(isset($attributes[$legacy]) && !isset($attributes[$key])){
-                $attributes[$key]=$attributes[$legacy];
-                unset($attributes[$legacy]);
-            }
-        }
-        return $attributes;
-    }
+
     protected function isWpField($key){
         return in_array($key,$this->wp_fields);
-    }
-    protected function isFillable($key){
-        if($this->fillable==['*']){
-            return true;
-        }
-        return $this->isWpField($key)||in_array($key,$this->fillable);
     }
     protected function isAdditionalMeta($key){
         return !$this->isWpField($key);
@@ -276,11 +268,15 @@ class User extends \WP_User implements
         return $saved;
     }
     protected function performUpdate(){
+
+        if ($this->fireModelEvent('updating') === false) {
+            return false;
+        }
+
         $this->data->ID=$this->ID;
 
         if(!empty($this->data->user_pass)
-            && !empty($this->originalData->user_pass)
-            && $this->data->user_pass !== $this->originalData->user_pass
+            && $this->isDirty('user_pass')
             && !$this->skipPasswordHash
         ){
             $this->data->user_pass=wp_hash_password($this->data->user_pass);
@@ -289,25 +285,52 @@ class User extends \WP_User implements
         if(is_wp_error($result)){
             throw (new WpErrorException($result->get_error_message()))->setWpError($result);
         }
+        $this->performUpdateExtra();
         $this->syncChanges();
+        $this->fireModelEvent('updated', false);
         return $result;
 
     }
     protected function performInsert(){
+        if ($this->fireModelEvent('creating') === false) {
+            return false;
+        }
         $result=wp_insert_user($this->data);
         if(is_wp_error($result)){
             throw (new WpErrorException($result->get_error_message()))->setWpError($result);
         }
+        $this->performUpdateExtra();
         $this->ID=$result;
         $this->wasRecentlyCreated = true;
+        $this->fireModelEvent('created', false);
         return $result;
     }
     protected function finishSave($options){
+
+        $data=static::get_data_by('id',$this->ID);
+        $this->init( $data, $this->get_site_id() );
+
+        $this->fireModelEvent('saved', false);
+    }
+
+    protected function performUpdateExtra(){
+        //List of fields which not handled by wp_insert_user
+        $fields=['user_activation_key','user_login','user_status'];
+        $update=[];
         if(isset($this->data->user_activation_key)) {
-            $this->updateUserActivationKey($this->data->user_activation_key);
+            $update['user_activation_key']=$this->data->user_activation_key;
+        }
+        if(isset($this->data->user_status)){
+            $update['user_status']=$this->data->user_status;
+        }
+        if($newLogin=$this->maybeUpdateUserLogin()){
+            $update['user_login']=$newLogin;
         }
 
-        $this->maybeUpdateUserLogin();
+        global $wpdb;
+        if($this->ID && $update) {
+            $wpdb->update($wpdb->users, $update, ['ID' => $this->ID]);
+        }
 
         foreach ($this->data as $key=>$value){
             if($this->isAdditionalMeta($key)){//we need to update additional meta fields which not maintained in wp_insert_user
@@ -318,27 +341,10 @@ class User extends \WP_User implements
                 }
             }
         }
-
-        $data=static::get_data_by('id',$this->ID);
-        $this->init( $data, $this->get_site_id() );
     }
 
     static function create($attributes){
         return (new static())->fill($attributes)->save();
-    }
-
-    /**
-     * Fire the given event for the model.
-     *
-     * @param  string  $event
-     * @param  bool  $halt
-     * @return mixed
-     */
-    protected function fireModelEvent($event, $halt = true)
-    {
-        if (! isset(static::$dispatcher)) {
-            return true;
-        }
     }
 
     public function toArray()
@@ -434,27 +440,14 @@ class User extends \WP_User implements
         return parent::__isset($key);
     }
 
-    /**
-     * user_activation_key is not properly update in wp_insert_user, it also force cleared when email changed
-     * @param $key
-     * @return false|int
-     */
-    public function updateUserActivationKey($key){
-        global $wpdb;
-        if($this->ID) {
-            return $wpdb->update($wpdb->users, ['user_activation_key' => $key], ['ID' => $this->ID]);
-        }
-        return false;
-    }
 
     /**
      * This method help to update user login, since user login not able to update with wp_user_insert
      * @param $newLogin
      * @return bool|false|int
-     * @throws ModelException
+     * @throws WpErrorException
      */
     protected function maybeUpdateUserLogin($newLogin=null){
-        global $wpdb;
         $oldLogin=(string)$this->getOriginal('user_login');
         if($newLogin===null){
             $newLogin=(string)$this->user_login;
@@ -463,18 +456,13 @@ class User extends \WP_User implements
         if($this->ID && $newLogin!==$oldLogin) {
             $user = get_user_by( 'login', $newLogin );
             if($user && $user->ID !== $this->ID){
-                $exception=new UserSaveException("User login ".$newLogin." already exits",'existing_user_login');
+                $exception=new WpErrorException("User login ".$newLogin." already exits",'existing_user_login');
                 $exception->setWpError((new \WP_Error('existing_user_login','',['dupe_with_id'=>$user->ID])));
                 throw ($exception);
             }
-            $updated= $wpdb->update($wpdb->users, ['user_login' => $newLogin], ['ID' => $this->ID]);
-            wp_cache_delete( $oldLogin, 'userlogins' );
-            wp_cache_delete( $this->ID, 'users');
-            $this->syncOriginal('user_login');
-
-            return $updated;
+            return $newLogin;
         }
-        return false;
+        return null;
     }
 
     /***

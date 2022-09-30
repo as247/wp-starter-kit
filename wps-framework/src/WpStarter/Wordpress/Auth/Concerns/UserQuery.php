@@ -6,7 +6,7 @@
  * Time: 1:51 PM
  */
 
-namespace WpStarter\Wordpress\Auth\User;
+namespace WpStarter\Wordpress\Auth\Concerns;
 use WpStarter\Support\Str;
 use WpStarter\Support\Traits\ForwardsCalls;
 use WpStarter\Database\ConnectionResolverInterface as Resolver;
@@ -43,6 +43,9 @@ trait UserQuery
     function getKeyType(){
         return 'int';
     }
+    function getTable(){
+        return 'users';
+    }
     /**
      * Get the number of models to return per page.
      *
@@ -65,9 +68,7 @@ trait UserQuery
 
         return $this;
     }
-    function getTable(){
-        return 'users';
-    }
+
 
     /**
      * Qualify the given column name by the model's table.
@@ -80,10 +81,8 @@ trait UserQuery
         if (Str::contains($column, '.')) {
             return $column;
         }
-
         return $this->getTable().'.'.$column;
     }
-
     /**
      * Get the table qualified key name.
      *

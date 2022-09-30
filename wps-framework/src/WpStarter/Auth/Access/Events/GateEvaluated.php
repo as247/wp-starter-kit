@@ -7,7 +7,7 @@ class GateEvaluated
     /**
      * The authenticatable model.
      *
-     * @var \WP_User|null
+     * @var \WpStarter\Wordpress\User|null
      */
     public $user;
 
@@ -35,7 +35,7 @@ class GateEvaluated
     /**
      * Create a new event instance.
      *
-     * @param  \WP_User|null  $user
+     * @param  \WpStarter\Wordpress\User|null  $user
      * @param  string  $ability
      * @param  bool|null  $result
      * @param  array  $arguments
