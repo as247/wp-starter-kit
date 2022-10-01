@@ -29,7 +29,7 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::get('/sample-page',function(){
                 if(ws_request('full')) {
-                    return Shortcode::make('main','a',['text'=>'this a shortcode']);
+                    return shortcode_view('main','a',['text'=>'this a shortcode']);
                 }else{
                     return wp_view('a',['text'=>'This is wp view'])->withTitle('Custom title');
                 }
