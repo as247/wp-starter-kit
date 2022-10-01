@@ -1,7 +1,6 @@
 <?php
 
 use WpStarter\Container\Container;
-use WpStarter\Contracts\Auth\Access\Gate;
 use WpStarter\Contracts\Auth\Factory as AuthFactory;
 use WpStarter\Contracts\Broadcasting\Factory as BroadcastFactory;
 use WpStarter\Contracts\Bus\Dispatcher;
