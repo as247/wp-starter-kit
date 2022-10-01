@@ -3,14 +3,23 @@
 namespace WpStarter\Wordpress\Auth;
 
 use WP_User;
+use WpStarter\Contracts\Broadcasting\HasBroadcastChannel;
+use WpStarter\Contracts\Queue\QueueableEntity;
+use WpStarter\Contracts\Routing\UrlRoutable;
+use WpStarter\Contracts\Support\Arrayable;
+use WpStarter\Contracts\Support\CanBeEscapedWhenCastToString;
+use WpStarter\Contracts\Support\Jsonable;
 use WpStarter\Database\Eloquent\MassAssignmentException;
 use WpStarter\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use WpStarter\Exceptions\WpErrorException;
 use WpStarter\Wordpress\Auth\Access\Authorizable;
 use WpStarter\Wordpress\Auth\Concerns\UserQuery;
+use JsonSerializable;
+use ArrayAccess;
 
 abstract class User extends WP_User implements
-    AuthorizableContract
+    AuthorizableContract,
+    Arrayable, ArrayAccess, Jsonable, JsonSerializable
 {
     use Authorizable;
     use Concerns\HasAttributes,

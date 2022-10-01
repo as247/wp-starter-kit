@@ -2,17 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\InstallationFinished;
-use App\Events\InstallationRead;
-use App\Events\InstallationStarted;
-use App\Listeners\InstallationDoneListener;
-use App\Listeners\InstallationReadListener;
-use App\Listeners\InstallationStartedListener;
-use App\Listeners\UsageStatistic;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use WpStarter\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,18 +12,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
+        Event::class => [
+            Listener::class,
         ],
-        InstallationStarted::class=>[
-            InstallationStartedListener::class,
-        ],
-        InstallationRead::class=>[
-            InstallationReadListener::class,
-        ],
-        InstallationFinished::class=>[
-            InstallationDoneListener::class,
-        ]
     ];
 
     /**

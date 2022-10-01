@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => ws_env('APP_NAME', 'Laravel'),
+    'name' => ws_env('APP_NAME', 'Wordpress Starter'),
 
     /*
     |--------------------------------------------------------------------------
@@ -156,7 +156,6 @@ return [
         WpStarter\Pipeline\PipelineServiceProvider::class,
         WpStarter\Queue\QueueServiceProvider::class,
         WpStarter\Redis\RedisServiceProvider::class,
-        WpStarter\Auth\Passwords\PasswordResetServiceProvider::class,
         WpStarter\Session\SessionServiceProvider::class,
         WpStarter\Translation\TranslationServiceProvider::class,
         WpStarter\Validation\ValidationServiceProvider::class,

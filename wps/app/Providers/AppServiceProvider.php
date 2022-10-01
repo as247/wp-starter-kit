@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\Seo;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\ServiceProvider;
+use WpStarter\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,8 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        File::requireOnce(app_path('Support/helpers.php'));
-        $this->app->singleton(Seo::class);
+
     }
 
     /**
@@ -26,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        throw new \Exception('boot failled');
     }
 }

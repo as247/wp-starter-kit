@@ -99,10 +99,10 @@ final class SW_MAIN
                 }else {
                     $response->send();
                     $kernel->terminate($request, $response);
+                    die;
                 }
-
-
             }
+            file_put_contents(__DIR__.'/a.txt','haha');;
 		}, 1);
         do_action('sw_early_bootstrap');
 
