@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //throw new \Exception('boot failled');
+        global $wp_actions;
+        //dd($wp_actions);
+        //die;
     }
 }

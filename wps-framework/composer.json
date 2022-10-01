@@ -52,7 +52,8 @@
             "src/WpStarter/Collections/helpers.php",
             "src/WpStarter/Events/functions.php",
             "src/WpStarter/Foundation/helpers.php",
-            "src/WpStarter/Support/helpers.php"
+            "src/WpStarter/Support/helpers.php",
+            "src/WpStarter/Wordpress/helpers.php"
         ],
         "psr-4": {
             "WpStarter\\": "src/WpStarter/",

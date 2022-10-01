@@ -106,7 +106,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      *
      * @var string
      */
-    protected $echoFormat = 'e(%s)';
+    protected $echoFormat = 'ws_e(%s)';
 
     /**
      * Array of footer lines to be added to the template.
@@ -803,7 +803,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     public function withDoubleEncoding()
     {
-        $this->setEchoFormat('e(%s, true)');
+        $this->setEchoFormat('ws_e(%s, true)');
     }
 
     /**
@@ -813,7 +813,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     public function withoutDoubleEncoding()
     {
-        $this->setEchoFormat('e(%s, false)');
+        $this->setEchoFormat('ws_e(%s, false)');
     }
 
     /**

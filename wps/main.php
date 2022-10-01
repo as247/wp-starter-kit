@@ -16,9 +16,9 @@ define('__WS_FILE__', __FILE__);
 
 require __DIR__ . '/bootstrap/autoload.php';
 use WpStarter\Http\Request;
-final class SW_MAIN
+final class WordpressStarter
 {
-	protected $sw;
+	protected $app;
 	static protected $instance;
 
 	public static function make()
@@ -31,7 +31,7 @@ final class SW_MAIN
 
 	function __construct()
 	{
-		$this->sw = require_once __DIR__ . '/bootstrap/app.php';
+		$this->app = require_once __DIR__ . '/bootstrap/app.php';
 	}
 
 	function run()
@@ -61,8 +61,9 @@ final class SW_MAIN
 
 	protected function runCli()
 	{
-		$kernel = $this->sw->make(WpStarter\Contracts\Console\Kernel::class);
+		$kernel = $this->app->make(WpStarter\Contracts\Console\Kernel::class);
         //add_action('sw_early_bootstrap',[$kernel,'earlyBootstrap'],0);
+        add_action('plugins_loaded',[$kernel,'bootstrap'],1);
 		if(defined('WS_CLI') && WS_CLI) {
             add_action('init', function () use ($kernel) {
                 $status = $kernel->handle(
@@ -80,10 +81,13 @@ final class SW_MAIN
 
 	protected function runWeb()
 	{
-        $kernel = $this->sw->make(WpStarter\Contracts\Http\Kernel::class);
-	    add_action('init', function ()use($kernel) {
+        $kernel = $this->app->make(WpStarter\Contracts\Http\Kernel::class);
+        $request = Request::capture();
+        $this->app->instance('request', $request);
+        add_action('plugins_loaded',[$kernel,'bootstrap'],1);
+	    add_action('init', function ()use($kernel,$request) {
             $response = $kernel->handle(
-                $request = Request::capture()
+                $request
             );
             $this->processWebResponse($kernel,$request,$response);
 		}, 1);
@@ -94,10 +98,13 @@ final class SW_MAIN
     protected function processWebResponse($kernel,$request,$response){
         //Check to make sure 404 not raised by route
         if(!$request->isNotFoundHttpExceptionFromRoute()){
-            if($response instanceof \WpStarter\Wordpress\Response){
+            if($response instanceof \WpStarter\Wordpress\Response\Content){
                 $response->sendHeaders();
-                add_filter('the_content',function()use($response){
-                    return $response->getContent();
+                add_filter('the_title',function($content)use($response){
+                    return $response->getTitle($content);
+                });
+                add_filter('the_content',function($content)use($response){
+                    return $response->getContent($content);
                 });
                 $kernel->terminate($request, $response);
             }else {
@@ -109,6 +116,6 @@ final class SW_MAIN
     }
 }
 if(!wp_installing()) {
-    SW_MAIN::make()->run();
+    WordpressStarter::make()->run();
 }
 

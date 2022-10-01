@@ -5,10 +5,9 @@ namespace App\Providers;
 use WpStarter\Cache\RateLimiting\Limit;
 use WpStarter\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use WpStarter\Http\Request;
-use WpStarter\Support\Facades\Auth;
 use WpStarter\Support\Facades\RateLimiter;
 use WpStarter\Support\Facades\Route;
-use WpStarter\Wordpress\Response;
+use WpStarter\Wordpress\Response\Content;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -24,8 +23,16 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             Route::get('/abc',function(\WP_User $user){
-                return $user;
+                return Content::make('a');
             })->middleware('api');
+
+            Route::get('/sample-page',function(){
+                if(ws_request('full')) {
+                    return ws_view('a', ['text' => 'This is ws view']);
+                }else{
+                    return wp_view('a',['text'=>'This is wp view'])->withTitle('Custom title');
+                }
+            });
         });
     }
 
