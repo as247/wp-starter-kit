@@ -23,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        throw new \Exception('boot failled');
+        //throw new \Exception('boot failled');
     }
 }

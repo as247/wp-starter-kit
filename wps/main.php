@@ -16,7 +16,6 @@ define('__WS_FILE__', __FILE__);
 
 require __DIR__ . '/bootstrap/autoload.php';
 use WpStarter\Http\Request;
-use WpStarter\Contracts\Http\Kernel;
 final class SW_MAIN
 {
 	protected $sw;
@@ -64,7 +63,6 @@ final class SW_MAIN
 	{
 		$kernel = $this->sw->make(WpStarter\Contracts\Console\Kernel::class);
         //add_action('sw_early_bootstrap',[$kernel,'earlyBootstrap'],0);
-		add_action('plugins_loaded',[$kernel,'bootstrap'], 1);
 		if(defined('WS_CLI') && WS_CLI) {
             add_action('init', function () use ($kernel) {
                 $status = $kernel->handle(
@@ -83,30 +81,32 @@ final class SW_MAIN
 	protected function runWeb()
 	{
         $kernel = $this->sw->make(WpStarter\Contracts\Http\Kernel::class);
-        add_action('plugins_loaded',[$kernel,'bootstrap'], 1);
 	    add_action('init', function ()use($kernel) {
-
             $response = $kernel->handle(
                 $request = Request::capture()
             );
-            if($request->route()){//A route matched
-                if($response instanceof \WpStarter\Wordpress\Response){
-                    $response->sendHeaders();
-                    add_filter('the_content',function()use($response){
-                        return $response->getContent();
-                    });
-                    $kernel->terminate($request, $response);
-                }else {
-                    $response->send();
-                    $kernel->terminate($request, $response);
-                    die;
-                }
-            }
-
+            $this->processWebResponse($kernel,$request,$response);
 		}, 1);
         do_action('sw_early_bootstrap');
 
 	}
+
+    protected function processWebResponse($kernel,$request,$response){
+        //Check to make sure 404 not raised by route
+        if(!$request->isNotFoundHttpExceptionFromRoute()){
+            if($response instanceof \WpStarter\Wordpress\Response){
+                $response->sendHeaders();
+                add_filter('the_content',function()use($response){
+                    return $response->getContent();
+                });
+                $kernel->terminate($request, $response);
+            }else {
+                $response->send();
+                $kernel->terminate($request, $response);
+                die;
+            }
+        }
+    }
 }
 if(!wp_installing()) {
     SW_MAIN::make()->run();

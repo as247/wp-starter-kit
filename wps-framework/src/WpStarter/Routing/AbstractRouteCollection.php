@@ -39,7 +39,7 @@ abstract class AbstractRouteCollection implements Countable, IteratorAggregate, 
         if (count($others) > 0) {
             return $this->getRouteForMethods($request, $others);
         }
-
+        $request->setRouteNotFoundHttpException();
         throw new NotFoundHttpException;
     }
 

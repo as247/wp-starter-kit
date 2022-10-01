@@ -51,6 +51,12 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      * @var \Closure
      */
     protected $routeResolver;
+    /**
+     * Check if route not found
+     * @var bool
+     */
+    protected $routeNotFoundException=false;
+
 
     /**
      * Create a new WpStarter HTTP request from server variables.
@@ -647,6 +653,23 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     {
         $this->routeResolver = $callback;
 
+        return $this;
+    }
+
+    /**
+     * Check Not found response raised by route matching
+     * @return bool
+     */
+    public function isNotFoundHttpExceptionFromRoute(){
+        return $this->routeNotFoundException;
+    }
+
+    /**
+     * @param $flag
+     * @return $this
+     */
+    public function setRouteNotFoundHttpException($flag=true){
+        $this->routeNotFoundException=$flag;
         return $this;
     }
 
