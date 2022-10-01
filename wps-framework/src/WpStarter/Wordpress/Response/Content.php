@@ -34,7 +34,7 @@ class Content extends Response
     function getContent($content=null){
         return $this->view->render();
     }
-    public static function make($view = null, $data = [], $mergeData = []){
+    public static function make($view, $data = [], $mergeData = []){
         return new Content(ws_view($view,$data,$mergeData));
     }
     public function __call(string $name, array $arguments)

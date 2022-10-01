@@ -1,1 +1,1 @@
-{{$text}}2
+<p>{{$text}} view</p>

@@ -8,6 +8,7 @@ use WpStarter\Http\Request;
 use WpStarter\Support\Facades\RateLimiter;
 use WpStarter\Support\Facades\Route;
 use WpStarter\Wordpress\Response\Content;
+use WpStarter\Wordpress\Response\Shortcode;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -28,10 +29,11 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::get('/sample-page',function(){
                 if(ws_request('full')) {
-                    return ws_view('a', ['text' => 'This is ws view']);
+                    return Shortcode::make('main','a',['text'=>'this a shortcode']);
                 }else{
                     return wp_view('a',['text'=>'This is wp view'])->withTitle('Custom title');
                 }
+
             });
         });
     }

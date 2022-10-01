@@ -107,6 +107,18 @@ final class WordpressStarter
                     return $response->getContent($content);
                 });
                 $kernel->terminate($request, $response);
+            }elseif($response instanceof \WpStarter\Wordpress\Response\Shortcode){
+                $response->sendHeaders();
+                add_filter('the_title',function($content)use($response){
+                    return $response->getTitle($content);
+                });
+                foreach ($response->all() as $tag=>$view) {
+                    echo 'adding: '.$tag;
+                    add_shortcode($tag,function()use($view){
+                        return $view->render();
+                    });
+                }
+                $kernel->terminate($request, $response);
             }else {
                 $response->send();
                 $kernel->terminate($request, $response);
