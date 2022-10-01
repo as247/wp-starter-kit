@@ -4,7 +4,11 @@ namespace WpStarter\Auth;
 
 use WpStarter\Auth\Access\Gate;
 use WpStarter\Contracts\Auth\Access\Gate as GateContract;
+use WpStarter\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use WpStarter\Support\ServiceProvider;
+use WpStarter\Wordpress\User;
+use WpStarter\Wordpress\Auth\User as UserAbstract;
+
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -45,9 +49,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function registerUserResolver()
     {
-        $this->app->bind(\WpStarter\Wordpress\User::class, function ($app) {
+        $this->app->bind(AuthenticatableContract::class, function ($app) {
             return call_user_func($app['auth']->userResolver());
         });
+        $aliases=[\WP_User::class,User::class,UserAbstract::class];
+        foreach ($aliases as $alias) {
+            $this->app->alias(AuthenticatableContract::class,$alias);
+        }
     }
 
     /**

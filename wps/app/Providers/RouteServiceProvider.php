@@ -40,8 +40,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::get('/abc',function(){
-                dd(ws_auth()->user());
+            Route::get('/abc',function(\WP_User $user){
+                dd($user);
             });
         });
     }

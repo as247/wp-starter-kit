@@ -565,21 +565,6 @@ if (! function_exists('ws_old')) {
     }
 }
 
-if (! function_exists('ws_policy')) {
-    /**
-     * Get a policy instance for a given class.
-     *
-     * @param  object|string  $class
-     * @return mixed
-     *
-     * @throws \InvalidArgumentException
-     */
-    function ws_policy($class)
-    {
-        return ws_app(Gate::class)->getPolicyFor($class);
-    }
-}
-
 if (! function_exists('ws_public_path')) {
     /**
      * Get the path to the public folder.

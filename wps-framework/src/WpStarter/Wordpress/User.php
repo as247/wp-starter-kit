@@ -2,11 +2,15 @@
 
 namespace WpStarter\Wordpress;
 
+use WpStarter\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use WpStarter\Contracts\Auth\Authenticatable;
 use WpStarter\Database\Eloquent\Collection;
+use WpStarter\Wordpress\Auth\Access\Authorizable;
 use WpStarter\Wordpress\Auth\User as Model;
 
-class User extends Model
+class User extends Model implements AuthorizableContract, Authenticatable
 {
+    use Authorizable;
     /**
      * @param \WP_User|null $wp_user
      * @return static|null
