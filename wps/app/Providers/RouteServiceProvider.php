@@ -32,7 +32,10 @@ class RouteServiceProvider extends ServiceProvider
                 if(ws_request('full')) {
                     return shortcode_view('main','a',['text'=>'this a shortcode']);
                 }else{
-                    return content_view(new HelloComponent(),['abc'],['def']);
+                    return content_view(function ($data){
+                        dd($data);
+                        return 'hello';
+                    },['abc'],['def']);
                 }
 
             });

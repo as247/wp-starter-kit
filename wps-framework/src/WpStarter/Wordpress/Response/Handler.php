@@ -3,6 +3,7 @@
 namespace WpStarter\Wordpress\Response;
 
 use WpStarter\Contracts\Http\Kernel;
+use WpStarter\Contracts\Support\Renderable;
 use WpStarter\Http\Request;
 use WpStarter\Wordpress\Contracts\HasGetTitle;
 use WpStarter\Wordpress\Response;
@@ -47,11 +48,19 @@ class Handler
             } elseif ($response instanceof Shortcode) {
                 foreach ($response->all() as $tag => $view) {
                     add_shortcode($tag, function () use ($view) {
-                        return $view->render();
+                        return static::renderView($view);
                     });
                 }
             }
             $this->registerTerminateOnShutdown();
+        }
+    }
+    public static function renderView($view){
+        if($view instanceof Renderable) {
+            return $view->render();
+        }
+        if(method_exists($view,'__toString')){
+            return $view->__toString();
         }
     }
     protected function registerTerminateOnShutdown(){

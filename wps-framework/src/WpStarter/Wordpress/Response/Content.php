@@ -17,18 +17,15 @@ class Content extends Response implements HasGetTitle
 {
     protected $view;
     protected $title;
-    public function __construct(Renderable $view)
-    {
+    public function __construct($view){
         parent::__construct();
         $this->view=$view;
     }
-    function mountComponent()
-    {
+    function mountComponent(){
         if($this->view instanceof Component){
             $this->view->mount();
         }
     }
-
     function withTitle($title){
         $this->title=$title;
         return $this;
@@ -40,7 +37,11 @@ class Content extends Response implements HasGetTitle
         return $title;
     }
     function getContent($content=null){
-        return $this->view->render();
+        $rendered=Handler::renderView($this->view);
+        if($rendered){
+            return $rendered;
+        }
+        return $content;
     }
     public static function make($view, $data = [], $mergeData = []){
         $view=ws_app(Factory::class)->make($view,$data,$mergeData);

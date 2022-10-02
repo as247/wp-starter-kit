@@ -12,11 +12,11 @@ use WpStarter\Wordpress\View\Factory;
 class Shortcode extends Response implements HasGetTitle
 {
     /**
-     * @var Renderable[]
+     * @var Renderable[]|\Closure[]|mixed[]
      */
     protected $shortcodes=[];
     protected $title;
-    public function __construct($tag=null,Renderable $view=null)
+    public function __construct($tag=null, $view=null)
     {
         parent::__construct();
         if($tag && $view) {

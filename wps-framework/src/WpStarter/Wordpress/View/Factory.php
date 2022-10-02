@@ -10,10 +10,13 @@ class Factory
         if(is_string($view)) {
             $view = ws_view($view, $data, $mergeData);
         }
-        if($view instanceof Component){
-            $data = array_merge($mergeData, $this->parseData($data));
-            $view->setData($data);
+        if($view instanceof \Closure){
+            $view=new ClosureComponent($view);
         }
+        if($view instanceof Component){
+            $view->setData(array_merge($mergeData, $this->parseData($data)));
+        }
+
         return $view;
     }
     /**
