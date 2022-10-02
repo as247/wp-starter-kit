@@ -4,7 +4,7 @@ use WpStarter\Wordpress\Response\Shortcode;
 use WpStarter\Wordpress\Response\Page;
 if (! function_exists('wp_view')) {
     /**
-     * Get the post content view
+     * Get the full page view
      *
      * @param  $view
      * @param  \WpStarter\Contracts\Support\Arrayable|array  $data
