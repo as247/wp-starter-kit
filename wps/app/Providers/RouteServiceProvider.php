@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Component\HelloComponent;
 use WpStarter\Cache\RateLimiting\Limit;
 use WpStarter\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use WpStarter\Http\Request;
@@ -31,7 +32,7 @@ class RouteServiceProvider extends ServiceProvider
                 if(ws_request('full')) {
                     return shortcode_view('main','a',['text'=>'this a shortcode']);
                 }else{
-                    return wp_view('a',['text'=>'This is wp view'])->withTitle('Custom title');
+                    return content_view(new HelloComponent(),['abc'],['def']);
                 }
 
             });

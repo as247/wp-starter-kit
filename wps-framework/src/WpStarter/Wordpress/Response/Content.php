@@ -2,25 +2,33 @@
 
 namespace WpStarter\Wordpress\Response;
 
+use WpStarter\Contracts\Support\Renderable;
 use WpStarter\Contracts\View\View;
-use Symfony\Component\HttpFoundation\Response;
+use WpStarter\Wordpress\Contracts\HasGetTitle;
+use WpStarter\Wordpress\Response;
+use WpStarter\Wordpress\View\Component;
+use WpStarter\Wordpress\View\Factory;
+
 
 /**
  * @mixin View
  */
-class Content extends Response
+class Content extends Response implements HasGetTitle
 {
     protected $view;
     protected $title;
-    public function __construct(View $view)
+    public function __construct(Renderable $view)
     {
         parent::__construct();
         $this->view=$view;
     }
-
-    function sendHeaders(){
-
+    function mountComponent()
+    {
+        if($this->view instanceof Component){
+            $this->view->mount();
+        }
     }
+
     function withTitle($title){
         $this->title=$title;
         return $this;
@@ -35,11 +43,12 @@ class Content extends Response
         return $this->view->render();
     }
     public static function make($view, $data = [], $mergeData = []){
-        return new Content(ws_view($view,$data,$mergeData));
+        $view=ws_app(Factory::class)->make($view,$data,$mergeData);
+        return new static($view);
     }
-    public function __call(string $name, array $arguments)
+    public function __call($method, $parameters)
     {
-        call_user_func_array([$this->view,$name],$arguments);
+        call_user_func_array([$this->view,$method],$parameters);
         return $this;
     }
 }

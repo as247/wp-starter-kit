@@ -2,24 +2,36 @@
 
 namespace WpStarter\Wordpress\Response;
 
-use Symfony\Component\HttpFoundation\Response;
+use WpStarter\Contracts\Support\Renderable;
+use WpStarter\Wordpress\Contracts\HasGetTitle;
+use WpStarter\Wordpress\Response;
 use WpStarter\Contracts\View\View;
+use WpStarter\Wordpress\View\Component;
+use WpStarter\Wordpress\View\Factory;
 
-class Shortcode extends Response
+class Shortcode extends Response implements HasGetTitle
 {
     /**
-     * @var View[]
+     * @var Renderable[]
      */
     protected $shortcodes=[];
     protected $title;
-    public function __construct($tag,View $view)
+    public function __construct($tag=null,Renderable $view=null)
     {
         parent::__construct();
-        $this->shortcodes[$tag]=$view;
+        if($tag && $view) {
+            $this->shortcodes[$tag] = $view;
+        }
     }
-    function sendHeaders(){
+    function mountComponent()
+    {
+        foreach ($this->shortcodes as $view){
+            if($view instanceof Component){
+                $view->mount();
+            }
+        }
+    }
 
-    }
     function withTitle($title){
         $this->title=$title;
         return $this;
@@ -35,7 +47,7 @@ class Shortcode extends Response
     }
     /**
      * @param $tag
-     * @return View|null
+     * @return Renderable|null
      */
     function view($tag){
         return $this->shortcodes[$tag]??null;
@@ -47,9 +59,7 @@ class Shortcode extends Response
      * @return mixed|View
      */
     function add($tag, $view, $data = [], $mergeData = []){
-        if(is_string($view)){
-            $view=ws_view($view,$data, $mergeData);
-        }
+        $view=ws_app(Factory::class)->make($view,$data,$mergeData);
         return $this->shortcodes[$tag]=$view;
     }
 
@@ -61,9 +71,8 @@ class Shortcode extends Response
      * @return static
      */
     public static function make($tag, $view, $data = [], $mergeData = []){
-        if(is_string($view)){
-            $view=ws_view($view,$data,$mergeData);
-        }
-        return new static($tag,$view);
+        $r= new static();
+        $r->add($tag,$view,$data,$mergeData);
+        return $r;
     }
 }

@@ -98,27 +98,10 @@ final class WordpressStarter
     protected function processWebResponse($kernel,$request,$response){
         //Check to make sure 404 not raised by route
         if(!$request->isNotFoundHttpExceptionFromRoute()){
-            if($response instanceof \WpStarter\Wordpress\Response\Content){
-                $response->sendHeaders();
-                add_filter('the_title',function($content)use($response){
-                    return $response->getTitle($content);
-                });
-                add_filter('the_content',function($content)use($response){
-                    return $response->getContent($content);
-                });
-                $kernel->terminate($request, $response);
-            }elseif($response instanceof \WpStarter\Wordpress\Response\Shortcode){
-                $response->sendHeaders();
-                add_filter('the_title',function($content)use($response){
-                    return $response->getTitle($content);
-                });
-                foreach ($response->all() as $tag=>$view) {
-                    echo 'adding: '.$tag;
-                    add_shortcode($tag,function()use($view){
-                        return $view->render();
-                    });
-                }
-                $kernel->terminate($request, $response);
+            if($response instanceof \WpStarter\Wordpress\Response){
+                //Got a wordpress response, process it
+                $handler=$this->app->make(WpStarter\Wordpress\Response\Handler::class);
+                $handler->handle($kernel,$request,$response);
             }else {
                 $response->send();
                 $kernel->terminate($request, $response);
